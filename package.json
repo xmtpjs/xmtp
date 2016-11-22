@@ -1,0 +1,35 @@
+{
+  "name": "mx",
+  "version": "0.0.1",
+  "description": "MX",
+  "main": "src/application.js",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "mailparser": "^0.6.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.10.1",
+    "eslint-config-airbnb-base": "^10.0.1",
+    "eslint-plugin-import": "^2.2.0",
+    "matcha": "^0.7.0",
+    "mocha": "^3.1.2",
+    "nyc": "^8.4.0"
+  },
+  "scripts": {
+    "bench": "matcha bench/*/*.js",
+    "start": "node --harmony-async-await index.js",
+    "lint": "eslint bench src test",
+    "test": "mocha --harmony-async-await --reporter spec ./test/*.js ./test/*/*.js",
+    "test-cov": "nyc --reporter=lcov npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tiliq/mx.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/Tiliq/mx/issues"
+  },
+  "homepage": "https://github.com/Tiliq/mx#readme",
+  "private": true
+}

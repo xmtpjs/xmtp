@@ -1,7 +1,7 @@
 {
-  "name": "mx",
+  "name": "xmtp",
   "version": "0.0.1",
-  "description": "MX",
+  "description": "Extensible ESMTP Server",
   "main": "src/application.js",
   "dependencies": {
     "debug": "^2.2.0",
@@ -15,6 +15,9 @@
     "mocha": "^3.1.2",
     "nyc": "^8.4.0"
   },
+  "engines": {
+    "node": ">=7.0.0"
+  },
   "scripts": {
     "bench": "matcha bench/*/*.js",
     "start": "node --harmony-async-await index.js",
@@ -24,12 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tiliq/mx.git"
+    "url": "git+https://github.com/KevinMartin/smtp-server.git"
   },
   "author": "",
   "bugs": {
-    "url": "https://github.com/Tiliq/mx/issues"
+    "url": "https://github.com/KevinMartin/smtp-server/issues"
   },
-  "homepage": "https://github.com/Tiliq/mx#readme",
+  "homepage": "https://github.com/KevinMartin/smtp-server#readme",
   "private": true
 }

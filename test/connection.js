@@ -28,7 +28,7 @@ describe('connection', () => {
 		const connection = new Connection(app, conn);
 
 		assert.equal(connection.app, app);
-		assert.deepEqual(connection.conn, conn);
+		assert.deepEqual(connection.socket, conn);
 		assert.equal(connection.state, Connection.states.STATE_PAUSE);
 	});
 
@@ -296,6 +296,102 @@ Body
 
 		app.use('cmd_quit', async () => {
 			assert.equal(commands++, 6);
+
+			conn.write = data => {
+				conn.write = () => null;
+				assert.equal(data.trim(), '221 localhost closing connection.');
+				done();
+			};
+		});
+
+		app.callback()(conn);
+	});
+
+	it('should allow pipelining', done => {
+		const app	= Application();
+		const conn	= createFakeConn();
+
+		let commands = 0;
+
+		conn.write = data => {
+			conn.write = () => null;
+			assert.equal(data.trim(), '220 localhost ESMTP Server');
+			process.nextTick(() => conn.emit('data', 'EHLO client.com\r\n'));
+		};
+
+		app.use('cmd_ehlo', async (next, c) => {
+			assert.equal(commands++, 0);
+			assert.equal(c.transaction, null);
+			assert.equal(c.greeting, 'EHLO');
+			assert.equal(c.heloHost, 'client.com');
+
+			conn.write = data => {
+				conn.write = () => null;
+				assert.equal(c.esmtp, true);
+				assert.equal(data.split(/\r?\n/)[0], '250-localhost');
+
+				conn.emit('data', [
+					'RSET\r\n',
+					'MAIL FROM:<user@host.com>\r\n',
+					'RCPT TO:<user@client.com>\r\n',
+					'DATA\r\n'
+				].join(''));
+			};
+		});
+
+		app.use('cmd_mail', async (next, c) => {
+			assert.equal(commands++, 1);
+			assert.equal(c.pipelining, true);
+			assert.equal(c.transaction.mailFrom.user, 'user');
+			assert.equal(c.transaction.mailFrom.host, 'host.com');
+
+			conn.write = data => {
+				conn.write = () => null;
+				assert.equal(data.trim(), '250 OK');
+			};
+		});
+
+		app.use('cmd_rcpt', async (next, c) => {
+			assert.equal(commands++, 2);
+			assert.equal(c.transaction.rcptTo[0].user, 'user');
+			assert.equal(c.transaction.rcptTo[0].host, 'client.com');
+
+			conn.write = data => {
+				conn.write = () => null;
+				assert.equal(data.trim(), '250 OK');
+			};
+		});
+
+		app.use('cmd_data', async () => {
+			assert.equal(commands++, 3);
+
+			conn.write = data => {
+				conn.write = () => null;
+				assert.equal(data.trim(), '354 OK');
+				process.nextTick(() => conn.emit('data', `From: user@host.com
+To: user@client.com
+Subject: Test
+Date: Thu, 01 Jan 1970 00:00:00 -0500
+Content-Type: text/plain
+
+Body
+.\r\n`));
+			};
+		});
+
+		app.use('parse_end', async (next, c) => {
+			assert.equal(commands++, 4);
+			assert.equal(c.transaction.email.subject, 'Test');
+
+			conn.write = data => {
+				conn.write = () => null;
+				assert.equal(data.trim(), '250 Message accepted');
+				process.nextTick(() => conn.emit('data', 'QUIT\r\n'));
+			};
+		});
+
+		app.use('cmd_quit', async () => {
+			assert.equal(commands++, 5);
 
 			conn.write = data => {
 				conn.write = () => null;

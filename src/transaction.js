@@ -1,6 +1,6 @@
 'use strict';
 
-// const debug			= require('debug')('mx:transaction');
+// const debug			= require('debug')('xmtp:transaction');
 const Emitter		= require('events').EventEmitter;
 const MailParser	= require('mailparser').MailParser;
 

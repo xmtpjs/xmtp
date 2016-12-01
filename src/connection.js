@@ -1,6 +1,6 @@
 'use strict';
 
-const debug			= require('debug')('mx:connection');
+const debug			= require('debug')('xmtp:connection');
 const constants		= require('./constants.js');
 const Transaction	= require('./transaction');
 const dateUtils		= require('./utils/date.js');
@@ -31,14 +31,24 @@ function indexOfLF(buf, maxLength) {
 }
 
 module.exports = class Connection {
-	constructor(app, conn) {
+	constructor(app, socket, server) {
 		this.app	= app;
-		this.conn	= conn;
+		this.socket	= socket;
+		this.server	= server;
 		this.errors = 0;
 		this.state	= states.STATE_PAUSE;
 		this.esmtp = false;
 
-		this.setup().catch(error => {
+		try {
+			this.setup();
+		} catch (error) {
+			app.emit('error', error);
+			return;
+		}
+
+		debug(`connect ip=${socket.remoteAddress} port=${socket.remotePort}`);
+
+		app.hook('connect', this).catch(error => {
 			app.emit('error', error);
 		});
 	}
@@ -47,22 +57,18 @@ module.exports = class Connection {
 		return states;
 	}
 
-	async setup() {
-		const ip = this.conn.remoteAddress;
-
-		if (!ip) {
+	setup() {
+		if (!this.socket.remoteAddress) {
 			debug('No IP was provided');
-			this.conn.destroy();
+			this.socket.destroy();
 
 			throw new Error('No IP was provided');
 		}
 
-		debug(`connect ip=${ip} port=${this.conn.remotePort}`);
+		this.socket.on('end', this.disconnect.bind(this));
+		this.socket.on('close', this.disconnect.bind(this));
 
-		this.conn.on('end', this.disconnect.bind(this));
-		this.conn.on('close', this.disconnect.bind(this));
-
-		this.conn.on('error', err => {
+		this.socket.on('error', err => {
 			if (this.state >= states.STATE_DISCONNECTING) {
 				return;
 			}
@@ -71,7 +77,7 @@ module.exports = class Connection {
 			this.disconnect();
 		});
 
-		this.conn.on('timeout', () => {
+		this.socket.on('timeout', () => {
 			if (this.state >= states.STATE_DISCONNECTING) {
 				return;
 			}
@@ -79,9 +85,7 @@ module.exports = class Connection {
 			this.respond(421, 'timeout', this.disconnect.bind(this));
 		});
 
-		this.conn.on('data', data => this.processData(data));
-
-		return this.app.hook('connect', this);
+		this.socket.on('data', data => this.processData(data));
 	}
 
 	respond(code, msg, func = () => null) {
@@ -111,7 +115,7 @@ module.exports = class Connection {
 		}
 
 		try {
-			this.conn.write(message);
+			this.socket.write(message);
 		} catch (e) {
 			this.disconnect();
 			return;
@@ -142,7 +146,7 @@ module.exports = class Connection {
 			return;
 		}
 
-		this.conn.pause();
+		this.socket.pause();
 
 		if (this.state !== states.STATE_PAUSE_DATA) {
 			this.prevState = this.state;
@@ -156,7 +160,7 @@ module.exports = class Connection {
 			return;
 		}
 
-		this.conn.resume();
+		this.socket.resume();
 
 		if (this.prevState) {
 			this.state		= this.prevState;
@@ -198,7 +202,7 @@ module.exports = class Connection {
 		await this.app.hook('disconnect').catch(error => this.app.emit('error', error));
 
 		debug('disconnect %s', [
-			`ip=${this.conn.remoteAddress}`,
+			`ip=${this.socket.remoteAddress}`,
 			// 'rdns="' + ((this.remote_host) ? this.remote_host : '') + '"',
 			`helo="${this.heloHost ? this.heloHost : ''}"`,
 			// 'relay=' + (this.relaying ? 'Y' : 'N'),
@@ -220,12 +224,12 @@ module.exports = class Connection {
 		].join(' '));
 
 		this.state = states.STATE_DISCONNECTED;
-		this.conn.end();
+		this.socket.end();
 	}
 
 	async processData(data) {
 		if (this.state >= states.STATE_DISCONNECTING) {
-			debug(`Data after disconnect from ${this.conn.remoteAddress}`);
+			debug(`Data after disconnect from ${this.socket.remoteAddress}`);
 			return;
 		}
 
@@ -273,9 +277,6 @@ module.exports = class Connection {
 				switch (cmd) {
 					case 'RSET':
 					case 'MAIL':
-					case 'SEND':
-					case 'SOML':
-					case 'SAML':
 					case 'RCPT':
 						break;
 
@@ -306,7 +307,7 @@ module.exports = class Connection {
             && indexOfLF(this.currentData, maxLength) === -1
 		) {
 			if (this.state !== states.STATE_DATA && this.state !== states.STATE_PAUSE_DATA) {
-				this.conn.pause();
+				this.socket.pause();
 				this.currentData = null;
 
 				this.respond(521, 'Command line too long', () => this.disconnect());
@@ -324,7 +325,7 @@ module.exports = class Connection {
 
 	async processLine(buf) {
 		if (this.state >= states.STATE_DISCONNECTING) {
-			debug(`Data after disconnect from ${this.conn.remoteAddress}`);
+			debug(`Data after disconnect from ${this.socket.remoteAddress}`);
 			return;
 		} else if (this.state === states.STATE_DATA) {
 			this.accumulateData(buf);
@@ -341,10 +342,16 @@ module.exports = class Connection {
 		if (this.state === states.STATE_CMD) {
 			this.state = states.STATE_PAUSE_SMTP;
 
-			const [, method, , remaining]	= /^([^ ]*)( +(.*))?$/.exec(line);
-			const command					= `cmd_${method.toLowerCase()}`;
+			let [, method, , remaining]	= /^([^ ]*)( +(.*))?$/.exec(line);
+			let command					= `cmd_${method.toLowerCase()}`;
 
 			debug(`C: ${method} %s`, remaining || '');
+
+			if (this.nextHandler) {
+				command				= method = this.nextHandler;
+				remaining			= line;
+				this.nextHandler	= false;
+			}
 
 			if (this.app.hasHook(command)) {
 				await this.app.hook(command, this, remaining || '').catch(error => {
@@ -352,7 +359,14 @@ module.exports = class Connection {
 					this.respond(421, 'Internal Server Error', () => this.disconnect());
 				});
 			} else {
-				this.respond(500, 'Unrecognized command');
+				const handled = await this.app.hook('unrecognized_cmd', this, line).catch(error => {
+					this.app.emit('error', error);
+					this.respond(421, 'Internal Server Error', () => this.disconnect());
+				});
+
+				if (!handled) {
+					this.respond(500, 'Unrecognized command');
+				}
 			}
 		} else if (this.state === states.STATE_LOOP) {
 			if (line.toUpperCase() === 'QUIT') {
@@ -401,7 +415,7 @@ module.exports = class Connection {
 		}
 
 		this.transaction.addLeadingHeader('Received', [
-			`from ${this.heloHost} (${this.conn.remoteAddress})`,
+			`from ${this.heloHost} (${this.socket.remoteAddress})`,
 			`by ${this.app.get('me')} with ${this.greeting}`,
 			`envelope-from ${this.transaction.mailFrom};`,
 			dateUtils.toString(new Date())

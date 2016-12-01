@@ -1,7 +1,7 @@
 'use strict';
 
 const net			= require('net');
-const debug			= require('debug')('mx:application');
+const debug			= require('debug')('xmtp:application');
 const Emitter		= require('events').EventEmitter;
 const Connection	= require('./connection.js');
 const protocol		= require('./protocol.js');
@@ -35,10 +35,11 @@ class Application extends Emitter {
 	}
 
 	listen(port = 25, host = '0.0.0.0') {
-		const server = net.createServer(this.callback());
+		const server = net.createServer();
 
 		// server.unref();
 		server.on('error', err => this.emit('error', err));
+		server.on('connection', this.callback(server));
 		server.on('listening', () => {
 			debug(`Listening on ${server.address().address}:${server.address().port}`);
 			this.emit('listening');
@@ -48,6 +49,22 @@ class Application extends Emitter {
 
 		debug('listen');
 		this.servers.push(server);
+	}
+
+	plugin(name, options) {
+		const pluginPkg = ~name.indexOf('/') ? name : `xmtp-plugin-${name}`;
+
+		debug(`plugin ${name}`);
+
+		try {
+			const plugin = require(pluginPkg); // eslint-disable-line
+
+			plugin(options)(this);
+		} catch (error) {
+			const msg = `Package "${pluginPkg}" missing. Run \`npm install ${pluginPkg}\`.`;
+
+			throw new Error(msg);
+		}
 	}
 
 	hasHook(name) {
@@ -73,7 +90,7 @@ class Application extends Emitter {
 		return this;
 	}
 
-	callback() {
+	callback(server) {
 		this.hooks = Object.keys(this.middleware).reduce((obj, hook) => {
 			obj[hook] = compose(this.middleware[hook]); // eslint-disable-line no-param-reassign
 			return obj;
@@ -83,7 +100,7 @@ class Application extends Emitter {
 			this.on('error', this.handleError);
 		}
 
-		return conn => new Connection(this, conn);
+		return socket => new Connection(this, socket, server);
 	}
 
 	handleError(err) { // eslint-disable-line class-methods-use-this

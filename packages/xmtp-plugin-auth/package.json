@@ -1,0 +1,22 @@
+{
+  "name": "xmtp-plugin-auth",
+  "version": "0.0.1",
+  "description": "AUTH Plugin for XMTP",
+  "main": "src/index.js",
+  "dependencies": {
+    "debug": "^2.2.0"
+  },
+  "engines": {
+    "node": ">=7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xmtpjs/xmtp.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/xmtpjs/xmtp/issues"
+  },
+  "homepage": "https://github.com/xmtpjs/xmtp/blob/master/packages/xmtp-plugin-auth#readme",
+  "license": "MIT"
+}

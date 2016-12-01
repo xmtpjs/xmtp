@@ -1,0 +1,23 @@
+{
+  "name": "xmtp-core",
+  "version": "0.0.1",
+  "description": "Extensible ESMTP Server",
+  "main": "src/application.js",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "mailparser": "^0.6.1"
+  },
+  "engines": {
+    "node": ">=7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xmtpjs/xmtp.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/xmtpjs/xmtp/issues"
+  },
+  "homepage": "https://github.com/xmtpjs/xmtp/blob/master/packages/xmtp-core#readme",
+  "license": "MIT"
+}

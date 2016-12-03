@@ -1,7 +1,5 @@
 <p align="center">
-	<a href="https://babeljs.io/">
-		<img alt="XMTP" src="./.github/logo.png" />
-	</a>
+	<img alt="XMTP" src="./.github/logo.png" width="400" />
 </p>
 
 <p align="center">The Extensible ESMTP Server</p>

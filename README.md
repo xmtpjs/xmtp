@@ -1,6 +1,10 @@
-# Extensible ESMTP Server
+<p align="center">
+	<a href="https://babeljs.io/">
+		<img alt="XMTP" src="./.github/logo.png" />
+	</a>
+</p>
 
-Use Node.js v7+ (with `--harmony-async-await` flag).
+<p align="center">The Extensible ESMTP Server</p>
 
 ## Install
 ```bash
@@ -8,8 +12,11 @@ $ npm install --save xmtp-core
 ```
 
 ## Usage
+Two options:
+* Use Node.js v7+ with `--harmony-async-await` flag.
+* Use Node.js with Babel using `es2017` preset.
+
 ```js
-// $ node --harmony-async-await index.js
 const app = require('xmtp-core')();
 
 app.set('me', 'mail.host.com');

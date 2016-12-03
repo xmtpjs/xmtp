@@ -1,7 +1,7 @@
 'use strict';
 
 const crypto	= require('crypto');
-const debug		= require('debug')('xmtp:auth:digest-md5');
+const debug		= require('debug')('xmtp:plugin:auth:digest-md5');
 
 const notes = new WeakMap();
 

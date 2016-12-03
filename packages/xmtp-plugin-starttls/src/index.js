@@ -1,6 +1,6 @@
 'use strict';
 
-const debug									= require('debug')('xmtp:starttls');
+const debug									= require('debug')('xmtp:plugin:starttls');
 const { createSecureContext, TLSSocket }	= require('tls');
 
 module.exports = options => app => {

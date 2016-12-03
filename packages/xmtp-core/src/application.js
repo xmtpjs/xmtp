@@ -42,7 +42,7 @@ class Application extends Emitter {
 		server.on('connection', this.callback(server));
 		server.on('listening', () => {
 			debug(`Listening on ${server.address().address}:${server.address().port}`);
-			this.emit('listening');
+			this.emit('listening', server);
 		});
 
 		server.listen(port, host);

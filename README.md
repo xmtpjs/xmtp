@@ -2,13 +2,21 @@
 
 Use Node.js v7+ (with `--harmony-async-await` flag).
 
-Example usage (make sure to `npm install` first):
+## Install
+```bash
+$ npm install --save xmtp-core
+```
+
+## Usage
 ```js
-// $ node --harmony-async-await
-const app = require('xmtp')();
+// $ node --harmony-async-await index.js
+const app = require('xmtp-core')();
 
 app.set('me', 'mail.host.com');
 app.set('greeting', 'My Server Name');
+
+app.plugin('auth', { ...options });
+app.plugin('starttls', { ...options });
 
 app.use('rcpt', async (next, rcpt) => {
 	if (rcpt.host === 'host.com') {
@@ -40,8 +48,8 @@ app.listen(25); // May require sudo privileges.
 - [x] **NOOP**
 - [x] **HELP**
 - [x] **QUIT**
-- [x] **STARTTLS** (plugin)
-- [x] **AUTH** (plugin)
+- [x] [**AUTH**](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-auth) (plugin)
+- [x] [**STARTTLS**](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls) (plugin)
 - [ ] **PROXY** (plugin, wip)
 
 **SMTP Extensions:**

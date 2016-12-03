@@ -10,6 +10,9 @@
   "engines": {
     "node": ">=7.0.0"
   },
+  "files": [
+	"src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xmtpjs/xmtp.git"
@@ -18,6 +21,6 @@
   "bugs": {
     "url": "https://github.com/xmtpjs/xmtp/issues"
   },
-  "homepage": "https://github.com/xmtpjs/xmtp/blob/master/packages/xmtp-core#readme",
+  "homepage": "https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-core#readme",
   "license": "MIT"
 }

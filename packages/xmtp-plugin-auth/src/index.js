@@ -1,7 +1,7 @@
 'use strict';
 
 const path	= require('path');
-const debug	= require('debug')('xmtp:auth');
+const debug	= require('debug')('xmtp:plugin:auth');
 
 const dir = path.resolve(__dirname, 'methods');
 

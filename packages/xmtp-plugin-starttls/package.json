@@ -6,9 +6,15 @@
   "dependencies": {
     "debug": "^2.2.0"
   },
+  "peerDependencies": {
+	"xmtp-core": "^0.0.1"
+  },
   "engines": {
     "node": ">=7.0.0"
   },
+  "files": [
+	"src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xmtpjs/xmtp.git"
@@ -17,6 +23,6 @@
   "bugs": {
     "url": "https://github.com/xmtpjs/xmtp/issues"
   },
-  "homepage": "https://github.com/xmtpjs/xmtp/blob/master/packages/xmtp-plugin-starttls#readme",
+  "homepage": "https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls#readme",
   "license": "MIT"
 }

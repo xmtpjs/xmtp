@@ -61,6 +61,6 @@ xmtp:connection C: RCPT TO:<user@client.com> +7s
 xmtp:connection S: 250 OK +1ms
 ```
 
-It is suggested that XMTP plugins use the `xmtp:plugin:` prefix. View the [`xmtp-plugin-auth`](https://github.com/xmtpjs/xmtp/blob/master/packages/xmtp-plugin-auth/src/index.js) and [`xmtp-plugin-starttls`](https://github.com/xmtpjs/xmtp/blob/master/packages/xmtp-plugin-starttls/src/index.js) plugins.
+It is suggested that XMTP plugins use the `xmtp:plugin:` prefix. View the [`xmtp-plugin-auth`](https://github.com/xmtpjs/xmtp/blob/master/packages/xmtp-plugin-auth/src/index.js) and [`xmtp-plugin-starttls`](https://github.com/xmtpjs/xmtp/blob/master/packages/xmtp-plugin-starttls/src/index.js) plugins for examples.
 
 For more information on how to take advantage of the `DEBUG` environment variable, [view the `debug` module documentation](https://www.npmjs.com/package/debug).

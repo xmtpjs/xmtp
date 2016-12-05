@@ -1,6 +1,7 @@
 # XMTP Documentation
 
 ## Guides
+* [Contributing to XMTP](../.github/CONTRIBUTING.md)
 * [Supported Platforms](guides/supported-platforms.md)
 * [Debugging](guides/debugging.md)
 * [Writing Middleware](guides/writing-middleware.md)

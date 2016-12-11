@@ -2,7 +2,7 @@
 	<img alt="XMTP" src="./.github/logo.png" width="400" />
 </p>
 
-<p align="center">The Extensible ESMTP Server</p>
+<p align="center">⚡️ The Extensible ESMTP Server</p>
 
 ## Install
 ```bash
@@ -42,43 +42,48 @@ app.use('queue', async (next, conn) => {
 app.listen(25); // May require sudo privileges.
 ```
 
-**SMTP Commands:**
-- [x] **HELO**
-- [x] **EHLO**
-- [x] **MAIL**
-- [x] **RCPT**
-- [x] **DATA**
-- [x] **RSET**
-- [x] **VRFY**
-- [x] **NOOP**
-- [x] **HELP**
-- [x] **QUIT**
-- [x] [**AUTH**](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-auth) (plugin)
-- [x] [**STARTTLS**](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls) (plugin)
-- [ ] **PROXY** (plugin, wip)
+## Documentation
 
-**SMTP Extensions:**
+Guides and the API reference are located in the [docs](docs) directory.
 
-| Supported / Planned                       | No Planned Support                              |
-|-------------------------------------------|-------------------------------------------------|
-| <ul><li>[x] 8BITMIME</li></ul>            | <ul><li>[ ] ATRN</li></ul>                      |
-| <ul><li>[x] AUTH</li></ul>                | <ul><li>[ ] CHECKPOINT</li></ul>                |
-| <ul><li>[x] AUTH=</li></ul>               | <ul><li>[ ] ENHANGEDSTATUSCODES [sic]</li></ul> |
-| <ul><li>[ ] BINARYMIME</li></ul>          | <ul><li>[ ] ETRN</li></ul>                      |
-| <ul><li>[ ] BURL</li></ul>                | <ul><li>[ ] EXPN</li></ul>                      |
-| <ul><li>[ ] CHUNKING</li></ul>            | <ul><li>[ ] SAML</li></ul>                      |
-| <ul><li>[ ] DSN (wip)</li></ul>           | <ul><li>[ ] SEND</li></ul>                      |
-| <ul><li>[ ] ENHANCEDSTATUSCODES</li></ul>	| <ul><li>[ ] SOML</li></ul>                      |
-| <ul><li>[x] PIPELINING</li></ul>          | <ul><li>[ ] TIME</li></ul>                      |
-| <ul><li>[x] SIZE</li></ul>                | <ul><li>[ ] TURN</li></ul>                      |
-| <ul><li>[ ] SMTPUTF8</li></ul>            | <ul><li>[ ] VERB</li></ul>                      |
-| <ul><li>[x] STARTTLS</li></ul>            | <ul><li>[ ] X-EXPS</li></ul>                    |
-|                                           | <ul><li>[ ] X-EXPS=</li></ul>                   |
-|                                           | <ul><li>[ ] X-LINK2STATE</li></ul>              |
-|                                           | <ul><li>[ ] X-RCPTLIMIT</li></ul>               |
-|                                           | <ul><li>[ ] X-TURNME</li></ul>                  |
-|                                           | <ul><li>[ ] XEXCH50</li></ul>                   |
-|                                           | <ul><li>[ ] XUSER</li></ul>                     |
-|                                           | <ul><li>[ ] XSHADOW</li></ul>                   |
+## Org Plugins
+* [AUTH](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-auth)
+* [STARTTLS](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls)
 
- *wip = work in progress
+## Community Plugins
+<!--
+Add your plugin below in the following order:
+ * Command plugins (`cmd_*`, ie. AUTH, STARTTLS, etc) at the top.
+ * Generic plugins (ie. Queue, Spam) next.
+ * "Add your plugin here" link.
+
+If your plugin has the same name/function (ie. Two STARTTLS plugins) as another plugin, then place your plugin after it.
+-->
+* [*Add your plugin here*](https://github.com/xmtpjs/xmtp/edit/master/README.md)
+
+## SMTP Support
+
+| Supported Commands         | Supported Extensions                      | No Planned Support                              |
+|----------------------------|-------------------------------------------|-------------------------------------------------|
+| <ul><li>[x] HELO</li></ul> | <ul><li>[x] 8BITMIME</li></ul>            | ATRN                      |
+| <ul><li>[x] EHLO</li></ul> | <ul><li>[x] [AUTH](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-auth) (plugin)</li></ul> | CHECKPOINT                |
+| <ul><li>[x] MAIL</li></ul> | <ul><li>[x] AUTH=</li></ul>               | ENHANGEDSTATUSCODES [sic] |
+| <ul><li>[x] RCPT</li></ul> | <ul><li>[ ] BINARYMIME</li></ul>          | ETRN                      |
+| <ul><li>[x] DATA</li></ul> | <ul><li>[ ] BURL</li></ul>                | EXPN                      |
+| <ul><li>[x] RSET</li></ul> | <ul><li>[ ] CHUNKING</li></ul>            | SAML, SEND, SOML          |
+| <ul><li>[x] VRFY</li></ul> | <ul><li>[ ] DSN (wip)</li></ul>           | TIME                      |
+| <ul><li>[x] NOOP</li></ul> | <ul><li>[ ] ENHANCEDSTATUSCODES</li></ul> | TURN                      |
+| <ul><li>[x] HELP</li></ul> | <ul><li>[x] PIPELINING</li></ul>          | VERB                      |
+| <ul><li>[x] QUIT</li></ul> | <ul><li>[ ] PROXY (plugin, wip)</li></ul> | X-EXPS                    |
+|                            | <ul><li>[x] SIZE</li></ul>                | X-LINK2STATE              |
+|                            | <ul><li>[ ] SMTPUTF8 (wip)</li></ul>      | X-RCPTLIMIT               |
+|                            | <ul><li>[x] [STARTTLS](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls) (plugin) | X-TURNME              |
+|                            |                                           | XEXCH50                   |
+|                            |                                           | XUSER                     |
+|                            |                                           | XSHADOW                   |
+
+*wip = work in progress
+
+## License
+
+[MIT](LICENSE)

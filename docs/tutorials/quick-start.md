@@ -5,7 +5,7 @@
 The simplest ESMTP server setup imaginable:
 
 ```js
-const xmtp = require('xmtp');
+const xmtp = require('xmtp-core');
 const app = xmtp();
 
 app.listen(25);
@@ -16,7 +16,7 @@ app.listen(25);
 Generally, an XMTP app is structured like this:
 
 ```js
-const xmtp = require('xmtp');
+const xmtp = require('xmtp-core');
 const app = xmtp();
 
 // Settings
@@ -43,7 +43,7 @@ app.hook('rcpt', async (next, rcpt) => {
 
 // Events
 app.on('listening', server => {
-	console.log('Server listening on', server.address());
+	console.log(`Listening on ${server.address().address}:${server.address().port}`);
 });
 
 // Listen

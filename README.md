@@ -48,6 +48,7 @@ Guides and the API reference are located in the [docs](docs) directory.
 
 ## Org Plugins
 * [AUTH](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-auth)
+* [BINARYMIME + CHUNKING](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-chunking)
 * [STARTTLS](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls)
 
 ## Community Plugins
@@ -63,21 +64,21 @@ If your plugin has the same name/function (ie. Two STARTTLS plugins) as another 
 
 ## SMTP Support
 
-| Supported Commands         | Supported Extensions                      | No Planned Support        |
+| Supported Commands         | Supported/Planned Extensions              | No Planned Support        |
 |----------------------------|-------------------------------------------|---------------------------|
 | <ul><li>[x] HELO</li></ul> | <ul><li>[x] 8BITMIME</li></ul>            | ATRN                      |
-| <ul><li>[x] EHLO</li></ul> | <ul><li>[x] [AUTH](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-auth) (plugin)</li></ul> | CHECKPOINT                |
+| <ul><li>[x] EHLO</li></ul> | <ul><li>[x] [AUTH](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-auth) (plugin)</li></ul>           | CHECKPOINT                |
 | <ul><li>[x] MAIL</li></ul> | <ul><li>[x] AUTH=</li></ul>               | ENHANGEDSTATUSCODES [sic] |
-| <ul><li>[x] RCPT</li></ul> | <ul><li>[ ] BINARYMIME</li></ul>          | ETRN                      |
+| <ul><li>[x] RCPT</li></ul> | <ul><li>[x] [BINARYMIME](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-chunking) (plugin)</li></ul> | ETRN                      |
 | <ul><li>[x] DATA</li></ul> | <ul><li>[ ] BURL</li></ul>                | EXPN                      |
-| <ul><li>[x] RSET</li></ul> | <ul><li>[ ] CHUNKING</li></ul>            | SAML, SEND, SOML          |
-| <ul><li>[x] VRFY</li></ul> | <ul><li>[ ] DSN (wip)</li></ul>           | TIME                      |
+| <ul><li>[x] RSET</li></ul> | <ul><li>[x] [CHUNKING](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-chunking) (plugin)</li></ul>   | SAML, SEND, SOML          |
+| <ul><li>[x] VRFY</li></ul> | <ul><li>[ ] DSN</li></ul>                 | TIME                      |
 | <ul><li>[x] NOOP</li></ul> | <ul><li>[ ] ENHANCEDSTATUSCODES</li></ul> | TURN                      |
 | <ul><li>[x] HELP</li></ul> | <ul><li>[x] PIPELINING</li></ul>          | VERB                      |
 | <ul><li>[x] QUIT</li></ul> | <ul><li>[ ] PROXY (plugin, wip)</li></ul> | X-EXPS                    |
 |                            | <ul><li>[x] SIZE</li></ul>                | X-LINK2STATE              |
 |                            | <ul><li>[x] SMTPUTF8</li></ul>            | X-RCPTLIMIT               |
-|                            | <ul><li>[x] [STARTTLS](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls) (plugin) | X-TURNME                  |
+|                            | <ul><li>[x] [STARTTLS](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls) (plugin)             | X-TURNME                  |
 |                            |                                           | XEXCH50                   |
 |                            |                                           | XUSER                     |
 |                            |                                           | XSHADOW                   |

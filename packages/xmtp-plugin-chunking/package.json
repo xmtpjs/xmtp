@@ -1,0 +1,25 @@
+{
+  "name": "xmtp-plugin-chunking",
+  "version": "0.0.1",
+  "description": "CHUNKING Plugin for XMTP",
+  "main": "src/index.js",
+  "peerDependencies": {
+	"xmtp-core": "^0.0.1"
+  },
+  "engines": {
+    "node": ">=7.0.0"
+  },
+  "files": [
+	"src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xmtpjs/xmtp.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/xmtpjs/xmtp/issues"
+  },
+  "homepage": "https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-chunking#readme",
+  "license": "MIT"
+}

@@ -107,7 +107,7 @@ describe('application', () => {
 
 		// In case port 25 is unavailable.
 		app.once('error', err => {
-			if (~err.message.indexOf('EACCES')) {
+			if (err.message.includes('EACCES')) {
 				done();
 			} else {
 				done(err);
@@ -129,7 +129,7 @@ describe('application', () => {
 			assert.equal(app.servers.length, 2);
 		});
 
-		app.on('listening', done);
+		app.on('listening', () => done());
 
 		assert.equal(app.servers.length, 0);
 		app.listen(25, '0.0.0.0');

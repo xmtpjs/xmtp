@@ -63,8 +63,8 @@ If your plugin has the same name/function (ie. Two STARTTLS plugins) as another 
 
 ## SMTP Support
 
-| Supported Commands         | Supported Extensions                      | No Planned Support                              |
-|----------------------------|-------------------------------------------|-------------------------------------------------|
+| Supported Commands         | Supported Extensions                      | No Planned Support        |
+|----------------------------|-------------------------------------------|---------------------------|
 | <ul><li>[x] HELO</li></ul> | <ul><li>[x] 8BITMIME</li></ul>            | ATRN                      |
 | <ul><li>[x] EHLO</li></ul> | <ul><li>[x] [AUTH](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-auth) (plugin)</li></ul> | CHECKPOINT                |
 | <ul><li>[x] MAIL</li></ul> | <ul><li>[x] AUTH=</li></ul>               | ENHANGEDSTATUSCODES [sic] |
@@ -76,8 +76,8 @@ If your plugin has the same name/function (ie. Two STARTTLS plugins) as another 
 | <ul><li>[x] HELP</li></ul> | <ul><li>[x] PIPELINING</li></ul>          | VERB                      |
 | <ul><li>[x] QUIT</li></ul> | <ul><li>[ ] PROXY (plugin, wip)</li></ul> | X-EXPS                    |
 |                            | <ul><li>[x] SIZE</li></ul>                | X-LINK2STATE              |
-|                            | <ul><li>[ ] SMTPUTF8 (wip)</li></ul>      | X-RCPTLIMIT               |
-|                            | <ul><li>[x] [STARTTLS](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls) (plugin) | X-TURNME              |
+|                            | <ul><li>[x] SMTPUTF8</li></ul>            | X-RCPTLIMIT               |
+|                            | <ul><li>[x] [STARTTLS](https://github.com/xmtpjs/xmtp/tree/master/packages/xmtp-plugin-starttls) (plugin) | X-TURNME                  |
 |                            |                                           | XEXCH50                   |
 |                            |                                           | XUSER                     |
 |                            |                                           | XSHADOW                   |

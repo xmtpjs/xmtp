@@ -1,6 +1,7 @@
 'use strict';
 
 const net			= require('net');
+const tls			= require('tls');
 const debug			= require('debug')('xmtp:application');
 const Emitter		= require('events').EventEmitter;
 const Connection	= require('./connection.js');
@@ -34,14 +35,21 @@ class Application extends Emitter {
 		return this.settings[key];
 	}
 
-	listen(port = 25, host = '0.0.0.0') {
-		const server = net.createServer();
+	listen(port = 25, host = '0.0.0.0', tlsOptions) {
+		const server = tlsOptions ? tls.createServer(tlsOptions) : net.createServer();
+
+		if (tlsOptions) {
+			server.on('secureConnection', this.callback(server));
+		} else {
+			server.on('connection', this.callback(server));
+		}
 
 		// server.unref();
 		server.on('error', err => this.emit('error', err));
-		server.on('connection', this.callback(server));
 		server.on('listening', () => {
-			debug(`Listening on ${server.address().address}:${server.address().port}`);
+			const address = server.address();
+
+			debug(`Listening on ${address.address}:${address.port}`);
 			this.emit('listening', server);
 		});
 
@@ -52,7 +60,7 @@ class Application extends Emitter {
 	}
 
 	plugin(name, options) {
-		const pluginPkg = ~name.indexOf('/') ? name : `xmtp-plugin-${name}`;
+		const pluginPkg = name.includes('/') ? name : `xmtp-plugin-${name}`;
 
 		debug(`plugin ${name}`);
 

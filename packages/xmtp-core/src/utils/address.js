@@ -1,18 +1,13 @@
 'use strict';
 
 const hasBrackets	= /^<(.*)>$/;
-const qchar			= /([^a-zA-Z0-9!#$%&\x27*+\x2D/=?^_`{|}~.])/g;
+const qchar			= /([^a-zA-Z0-9!#$%&\x27*+\x2D/=?^_`{|}~.])/g; // ` <-- Bad syntax highlighting fix in Atom
 
 const domain		= /(?:(?:\[(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|IPv6:[0-9A-Fa-f:.]+)])|(?:[a-zA-Z0-9](?:[_\-a-zA-Z0-9]*[a-zA-Z0-9])?)(?:\.(?:[a-zA-Z0-9](?:[_\-a-zA-Z0-9]*[a-zA-Z0-9])?))*)/;
 const sourceRoute	= new RegExp(`^@${domain.source}(?:,@${domain.source})*:`);
-const userHost		= new RegExp(`^(.*)@(${domain.source})$`);
 
-const atom			= /[a-zA-Z0-9!#%&*+=?^_`{|}~$\x27\x2D/]+/;
-const atoms			= new RegExp(`^${atom.source}(\\.${atom.source})*`);
-
-const qtext			= /[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]/; // eslint-disable-line no-control-regex
-const text			= /\\([\x01-\x09\x0B\x0C\x0E-\x7F])/; // eslint-disable-line no-control-regex
-const quoted		= new RegExp(`^"((${qtext.source}|${text.source})*)"$`);
+const text			= /\\(.)/g; // eslint-disable-line no-control-regex
+const quoted		= new RegExp('^"(.*)"$');
 
 module.exports = class Address {
 	constructor(user, host) {
@@ -73,25 +68,17 @@ module.exports = class Address {
 			return;
 		}
 
-		const matches = userHost.exec(addr);
+		const atSign	= addr.lastIndexOf('@');
+		const user		= addr.substr(0, atSign);
 
-		if (!matches) {
-			throw new Error(`Invalid domain in address: ${addr}`);
+		this.host = addr.substr(atSign + 1).toLowerCase();
+
+		const quotedMatches = quoted.exec(user);
+
+		if (quotedMatches) {
+			this.user = quotedMatches[1].replace(text, '$1');
+		} else {
+			this.user = user;
 		}
-
-		this.host = matches[2].toLowerCase();
-
-		if (atoms.test(matches[1])) {
-			this.user = matches[1];
-			return;
-		}
-
-		const quotedMatches = quoted.exec(matches[1]);
-
-		if (!matches) {
-			throw new Error(`Invalid local part in address: ${addr}`);
-		}
-
-		this.user = quotedMatches[1].replace(text, '$1', 'g');
 	}
 };

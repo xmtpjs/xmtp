@@ -18,6 +18,7 @@ module.exports = async (next, conn, line) => {
 			conn.app.get('me'),
 			'PIPELINING',
 			'8BITMIME',
+			'SMTPUTF8',
 			`SIZE ${conn.app.get('databytes')}`
 		];
 

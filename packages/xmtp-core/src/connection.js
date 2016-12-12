@@ -37,7 +37,8 @@ module.exports = class Connection {
 		this.server	= server;
 		this.errors = 0;
 		this.state	= states.STATE_PAUSE;
-		this.esmtp = false;
+		this.esmtp	= false;
+		this.secure	= !!socket.ssl;
 
 		try {
 			this.setup();
@@ -334,23 +335,32 @@ module.exports = class Connection {
 
 		const line = buf.toString('binary').replace(/\r?\n/, '');
 
-		if (/[^\x00-\x7F]/.test(line)) { // eslint-disable-line no-control-regex
-			this.respond(501, 'Syntax error (8-bit characters not allowed)');
+		if (/^\x16\x03(\x00|\x01)/.test(line)) { // eslint-disable-line no-control-regex
+			this.currentData = null;
+
+			this.respond(501, 'SSL attempted over a non-SSL socket');
+			this.disconnect();
 			return;
 		}
 
 		if (this.state === states.STATE_CMD) {
 			this.state = states.STATE_PAUSE_SMTP;
 
-			let [, method, , remaining]	= /^([^ ]*)( +(.*))?$/.exec(line);
-			let command					= `cmd_${method.toLowerCase()}`;
-
-			debug(`C: ${method} %s`, remaining || '');
+			let method;
+			let remaining;
+			let command;
 
 			if (this.nextHandler) {
 				command				= method = this.nextHandler;
 				remaining			= line;
 				this.nextHandler	= false;
+			} else {
+				const utf8 = buf.toString('utf8').replace(/\r?\n/, '');
+
+				[, method, , remaining]	= /^([^ ]*)( +(.*))?$/.exec(utf8);
+				command					= `cmd_${method.toLowerCase()}`;
+
+				debug(`C: ${utf8}`);
 			}
 
 			if (this.app.hasHook(command)) {

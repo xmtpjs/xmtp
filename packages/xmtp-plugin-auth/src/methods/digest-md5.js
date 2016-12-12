@@ -34,7 +34,7 @@ function createResponseAuth(response, a1Base, a2Prefix = '') {
 		a1.update(`:${response.authzid}`);
 	}
 
-	const a2 = ~['auth-int', 'auth-conf'].indexOf(response.qop)
+	const a2 = ['auth-int', 'auth-conf'].includes(response.qop)
 		? md5(`${a2Prefix}:${response['digest-uri']}:00000000000000000000000000000000`)
 		: md5(`${a2Prefix}:${response['digest-uri']}`);
 

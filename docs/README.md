@@ -8,6 +8,7 @@
 * [Using TLS Encryption](guides/tls.md)
 * [Using the AUTH Plugin](guides/auth-plugin.md)
 * [Using the STARTTLS Plugin](guides/starttls-plugin.md)
+* [Using the CHUNKING/BINARYMIME Plugin](guides/starttls-plugin.md)
 
 ## Tutorials
 * [Quick Start](tutorials/quick-start.md)

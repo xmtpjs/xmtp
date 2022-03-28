@@ -1,6 +1,6 @@
 # Writing Middleware
 
-XMTP middleware are simple functions which return a `Promise`. The simplest way of writing writing a middleware is by using ES7 `async` functions.
+XMTP middleware are simple functions which return a `Promise`. The simplest way of writing a middleware is by using ES7 `async` functions.
 
 ```js
 // ES5
